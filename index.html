@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漫画星（精简开源版）</title>
+<meta name="description" content="免费开源的漫画阅读平台精简版：漫画分类浏览、竖向分镜滚动阅读、VIP 分集金币解锁，真实增删改查与解锁扣费逻辑，纯前端+localStorage实现，可作为学习或二次开发起点。">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">漫画<span class="accent">星</span></div>
+    <div class="topbar-right">
+      <div class="coin-badge"><span class="icon">🪙</span><span id="coinBalanceLabel">0</span></div>
+      <a href="admin.html" class="nav-link">进入创作者后台 →</a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="view-catalog" class="view active">
+      <div class="page-head">
+        <div>
+          <h1>发现好看的漫画</h1>
+          <p>点击封面查看分集列表，免费分集直接阅读，VIP 分集用金币解锁。这是一个真实可用的精简开源系统，数据保存在你浏览器本地。</p>
+        </div>
+      </div>
+      <div id="comicGrid" class="comic-grid"></div>
+    </section>
+
+    <section id="view-comic" class="view">
+      <span class="back-link" id="btnBackToCatalog">← 返回漫画列表</span>
+      <div class="comic-detail-head">
+        <div class="comic-detail-cover" id="comicDetailCover"></div>
+        <div class="comic-detail-info">
+          <h1 id="comicDetailTitle"></h1>
+          <div class="meta" id="comicDetailMeta"></div>
+          <div class="syn" id="comicDetailSyn"></div>
+        </div>
+      </div>
+      <div id="episodeList" class="episode-list"></div>
+    </section>
+
+    <section id="view-reader" class="view">
+      <div class="panel-reader">
+        <span class="back-link" id="btnBackToComic">← 返回分集列表</span>
+        <div class="reader-head">
+          <div>
+            <h1 id="readerEpTitle"></h1>
+            <div class="sub" id="readerEpSub"></div>
+          </div>
+          <div class="coin-badge"><span class="icon">🪙</span><span id="readerCoinBalance">0</span></div>
+        </div>
+        <div id="panelList"></div>
+        <div class="reader-nav">
+          <button class="btn" id="btnPrevEpisode">← 上一话</button>
+          <button class="btn btn-primary" id="btnNextEpisode">下一话 →</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="modal-backdrop" id="unlockModalBackdrop">
+    <div class="modal">
+      <button class="modal-close" id="btnCloseUnlockModal">&times;</button>
+      <h2 id="unlockEpTitle"></h2>
+      <p class="sub" id="unlockComicTitle"></p>
+      <div id="unlockModalMsg"></div>
+      <div class="unlock-price-row">
+        <div>
+          <div>解锁本话需要</div>
+          <div class="balance">当前余额：<span id="unlockBalanceLabel">0</span> 金币</div>
+        </div>
+        <div class="price"><span id="unlockPriceLabel">0</span> 金币</div>
+      </div>
+      <button class="btn btn-primary btn-block" id="btnConfirmUnlock">确认解锁</button>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+
+<footer style="margin:40px auto 16px;max-width:1100px;padding:16px 20px 0;border-top:1px solid var(--line,rgba(147,160,184,.18));text-align:center;color:var(--muted,#93A0B8);font-size:13px">精简开源演示 &middot; 完整版：<a href="https://inzyxuashop.com/manhua-yuanma.html" target="_blank" rel="noopener" style="color:var(--cyan,#19B8D4);text-decoration:none">漫画阅读平台源码</a></footer>
+</body>
+</html>

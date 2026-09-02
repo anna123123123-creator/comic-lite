@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>创作者后台 · 漫画星（精简开源版）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="brand">漫画<span class="accent">星</span> 后台</div>
+      <div class="side-link active" data-view="dashboard">仪表盘</div>
+      <div class="side-link" data-view="comics">漫画管理</div>
+      <div class="side-link" data-view="episodes">分集管理</div>
+      <div class="side-link" id="btnResetData" style="margin-top:20px;color:var(--red)">重置示例数据</div>
+      <a href="index.html" class="side-link">← 返回前台</a>
+    </aside>
+
+    <main class="admin-main">
+      <section id="view-dashboard" class="admin-view active">
+        <div class="page-head"><h1>仪表盘</h1><p>漫画、分集与金币解锁概览。</p></div>
+        <div class="stat-grid" id="statGrid"></div>
+        <table>
+          <thead><tr><th>漫画</th><th>分集</th><th>消耗金币</th><th>时间</th></tr></thead>
+          <tbody id="recentUnlocksBody"></tbody>
+        </table>
+      </section>
+
+      <section id="view-comics" class="admin-view">
+        <div class="page-head"><h1>漫画管理</h1><p>添加、编辑或删除漫画。删除漫画会一并删除它的所有分集。</p></div>
+        <div class="table-toolbar">
+          <span></span>
+          <button class="btn btn-primary btn-sm" id="btnAddComic">+ 新增漫画</button>
+        </div>
+        <table>
+          <thead><tr><th>封面</th><th>标题</th><th>作者</th><th>分类</th><th>状态</th><th>分集数</th><th>操作</th></tr></thead>
+          <tbody id="comicsBody"></tbody>
+        </table>
+      </section>
+
+      <section id="view-episodes" class="admin-view">
+        <div class="page-head"><h1>分集管理</h1><p>选择一部漫画，管理它的分集顺序、VIP 状态与分镜内容。</p></div>
+        <div class="table-toolbar">
+          <select class="select-inline" id="episodeComicSelect"></select>
+          <button class="btn btn-primary btn-sm" id="btnAddEpisode">+ 新增分集</button>
+        </div>
+        <table>
+          <thead><tr><th>顺序</th><th>标题</th><th>类型</th><th>分镜数</th><th>操作</th></tr></thead>
+          <tbody id="episodesBody"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <!-- Comic modal -->
+  <div class="modal-backdrop" id="comicModalBackdrop">
+    <div class="modal">
+      <button class="modal-close" id="btnCloseComicModal">&times;</button>
+      <h2 id="comicModalTitle">新增漫画</h2>
+      <div id="comicModalMsg"></div>
+      <form id="comicForm" novalidate>
+        <input type="hidden" id="comicIdInput">
+        <div class="field-row">
+          <div class="field"><label>标题</label><input id="comicTitleInput" type="text" required></div>
+          <div class="field"><label>封面 Emoji</label><input id="comicEmojiInput" type="text" maxlength="4" placeholder="📖" required></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>作者</label><input id="comicAuthorInput" type="text" required></div>
+          <div class="field">
+            <label>分类</label>
+            <select id="comicCategoryInput">
+              <option>热血</option><option>恋爱</option><option>搞笑</option>
+              <option>悬疑</option><option>奇幻</option><option>校园</option><option>其它</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>连载状态</label>
+          <select id="comicStatusInput"><option>连载中</option><option>已完结</option></select>
+        </div>
+        <div class="field"><label>简介</label><textarea id="comicSynInput" rows="3"></textarea></div>
+        <button type="submit" class="btn btn-primary btn-block">保存</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Episode modal -->
+  <div class="modal-backdrop" id="episodeModalBackdrop">
+    <div class="modal modal-wide">
+      <button class="modal-close" id="btnCloseEpisodeModal">&times;</button>
+      <h2 id="episodeModalTitle">新增分集</h2>
+      <div id="episodeModalMsg"></div>
+      <form id="episodeForm" novalidate>
+        <input type="hidden" id="episodeIdInput">
+        <div class="field"><label>分集标题</label><input id="episodeTitleInput" type="text" required></div>
+        <div class="field-checkbox">
+          <input type="checkbox" id="episodeVipInput">
+          <label for="episodeVipInput" style="margin:0">设为 VIP 分集（需要金币解锁）</label>
+        </div>
+        <div class="field" id="episodePriceField">
+          <label>解锁价格（金币）</label>
+          <input id="episodePriceInput" type="number" min="1" value="3">
+        </div>
+        <div class="field">
+          <label>分镜内容（按顺序，每个分镜一段文字）</label>
+          <div class="panel-editor-list" id="panelEditorList"></div>
+          <button type="button" class="btn btn-sm" id="btnAddPanel">+ 添加分镜</button>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">保存分集</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="admin.js"></script>
+
+<footer style="margin:40px auto 16px;max-width:1100px;padding:16px 20px 0;border-top:1px solid var(--line,rgba(147,160,184,.18));text-align:center;color:var(--muted,#93A0B8);font-size:13px">精简开源演示 &middot; 完整版：<a href="https://inzyxuashop.com/manhua-yuanma.html" target="_blank" rel="noopener" style="color:var(--cyan,#19B8D4);text-decoration:none">漫画阅读平台源码</a></footer>
+</body>
+</html>
